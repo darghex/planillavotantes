@@ -57,7 +57,7 @@ ROOT_URLCONF = 'registrocr.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ["%s/registrocr/templates" % BASE_DIR,],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,10 +79,10 @@ WSGI_APPLICATION = 'registrocr.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'registrocr',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '127.0.0.1',
+        'NAME': 'ddukuj5lqc2up9',
+        'USER': 'dlitfgjedrbxam',
+        'PASSWORD': 'DfydLQZIQ6oMspB_xMp86038TA',
+        'HOST': 'ec2-54-235-145-226.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
@@ -91,7 +91,7 @@ DATABASES = {
 
 ##########
 import dj_database_url
-DATABASES['default'] =  dj_database_url.config()
+#DATABASES['default'] =  dj_database_url.config()
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
  
@@ -103,9 +103,16 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
  
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
+    
 )
 ##########
 
