@@ -1,11 +1,10 @@
 {% extends "admin/base.html" %}
+{% load i18n %}{% load admin_static bootstrapped_goodies_tags %}
 
-{% block title %}{{ title }} | Registro de planillas CR Espinal{% endblock %}
+{% block title %}Administracion Planillas CR Espinal{% endblock %}
 
 {% block branding %}
-<h1 id="site-name"><a href="{% url 'admin:index' %}">
-	Gestión de Planillas</a>
-</h1>
+<a class="navbar-brand" href="{% url 'admin:index' %}">Registro de planillas Cambio Radical Espinal</a>
 {% endblock %}
 
 {% block nav-global %}{% endblock %}
