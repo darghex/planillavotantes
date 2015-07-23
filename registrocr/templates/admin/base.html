@@ -137,29 +137,7 @@
 
     <!-- Content -->
     <div id="content" class="{% block coltype %}colM{% endblock %}">
-        {% block navbar %}
-        <div class="navbar navbar-default">
-            <div class="navbar-inner">
-                {% block pretitle %}{% endblock %}
-                    <div class="navbar-header">
-                        {% block content-navbar-collapse %}
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#content-navbar-collapse" aria-expanded="false" aria-controls="navbar">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        {% endblock %}
-                    {% block content_title %}
-                    {% if title %}
-                        <span class="navbar-brand">{% render_with_template_if_exist title|lower|add:"/admin_app_name.html" title %}</span>
-                    {% endif %}
-                    {% endblock %}
-                    </div>
-                {% block object-tools %}{% endblock %}
-            </div>
-        </div>
-        {% endblock navbar %}
+        
 
         {% block messages %}
         {% if messages %}
