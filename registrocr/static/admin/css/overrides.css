@@ -271,3 +271,7 @@ div.navbar-inner{
 .navbar-default .container .navbar-nav>li>a:hover {
  color: #FF8;   
 }
+
+.form-signin {
+    background-color: #FFF;   
+}
