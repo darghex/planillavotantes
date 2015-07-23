@@ -26,12 +26,12 @@ class Ciudadano(models.Model):
 
 	nombres = models.CharField(max_length = 40)
 	apellidos = models.CharField(max_length = 40)
-	documento = models.IntegerField(unique=True, validators=[RegexValidator(regex='^\d{10}$', message='Documento no es correcto', code='Invalid number')])
+	documento = models.BigIntegerField(unique=True, validators=[RegexValidator(regex='^\d{10}$', message='Documento no es correcto', code='Invalid number')])
 	direccion = models.CharField(max_length = 50)
 	correo =  models.EmailField(max_length=70,blank=True, null = True)
 	ciudad = models.CharField(max_length = 1, choices = lst_ciudades )
-	telefono = models.IntegerField(unique=True, validators=[RegexValidator(regex='^\d{10}$', message='Documento no es correcto', code='Invalid number')])
-	fecha_cumpleanios = models.DateField( verbose_name = 'Fecha de cumpleaños')
+	telefono = models.BigIntegerField(unique=True, validators=[RegexValidator(regex='^\d{10}$', message='Telefono correcto', code='Invalid number')])
+	fecha_cumpleanios = models.DateField( verbose_name = 'Fecha de cumpleaño, Formato dd/mm/YYYY. Si el usuario no indica el año ingrese el actual')
 	lider = models.ForeignKey(User, editable =  False)
 	candidato =  models.ForeignKey(Candidato )
 
