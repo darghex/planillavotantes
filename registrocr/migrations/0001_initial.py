@@ -33,8 +33,13 @@ class Migration(migrations.Migration):
                 ('direccion', models.CharField(max_length=50)),
                 ('correo', models.EmailField(max_length=70, null=True, blank=True)),
                 ('ciudad', models.CharField(max_length=1, choices=[(b'1', b'ESPINAL'), (b'2', b'CHICORAL')])),
+<<<<<<< HEAD
                 ('telefono', models.BigIntegerField(unique=True, validators=[django.core.validators.RegexValidator(regex=b'^\\d{10}$', message=b'Telefono es correcto', code=b'Invalid number')])),
                 ('fecha_cumpleanios', models.DateField(verbose_name=b'Fecha de cumplea\xc3\xb1os (dd/mm/yyyy), si no se tiene al a\xc3\xb1o de nacimiento ingrese el actual')),
+=======
+                ('telefono', models.BigIntegerField(unique=True, validators=[django.core.validators.RegexValidator(regex=b'^\\d{10}$', message=b'Telefono no es correcto', code=b'Invalid number')])),
+                ('fecha_cumpleanios', models.DateField(verbose_name=b'Fecha de cumplea\xc3\xb1os')),
+>>>>>>> 6af10f13c37595b50ca6b0f14693fec07827c3b4
                 ('candidato', models.ForeignKey(to='registrocr.Candidato')),
                 ('lider', models.ForeignKey(editable=False, to=settings.AUTH_USER_MODEL)),
             ],

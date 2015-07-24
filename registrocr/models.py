@@ -30,8 +30,8 @@ class Ciudadano(models.Model):
 	direccion = models.CharField(max_length = 50)
 	correo =  models.EmailField(max_length=70,blank=True, null = True)
 	ciudad = models.CharField(max_length = 1, choices = lst_ciudades )
-	telefono = models.BigIntegerField(unique=True, validators=[RegexValidator(regex='^\d{10}$', message='Telefono es correcto', code='Invalid number')])
 	fecha_cumpleanios = models.DateField( verbose_name = 'Fecha de cumpleaños (dd/mm/yyyy), si no se tiene al año de nacimiento ingrese el actual')
+	telefono = models.BigIntegerField(unique=True, validators=[RegexValidator(regex='^\d{10}$', message='Telefono correcto', code='Invalid number')])
 	lider = models.ForeignKey(User, editable =  False)
 	candidato =  models.ForeignKey(Candidato )
 
