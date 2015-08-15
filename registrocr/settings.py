@@ -82,10 +82,10 @@ WSGI_APPLICATION = 'registrocr.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ddukuj5lqc2up9',
-        'USER': 'dlitfgjedrbxam',
-        'PASSWORD': 'DfydLQZIQ6oMspB_xMp86038TA',
-        'HOST': 'ec2-54-235-145-226.compute-1.amazonaws.com',
+        'NAME': 'dfqf7gilni38f2',
+        'USER': 'keticwzqxejwhd',
+        'PASSWORD': 'sm_SljxaYBHGuTTH0KD_ECDXhJ',
+        'HOST': 'ec2-54-235-147-211.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
