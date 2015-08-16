@@ -49,7 +49,7 @@ class CiudadanoAdmin(ImportExportActionModelAdmin):
 @admin.register(Lider)
 class LiderAdmin(ImportExportActionModelAdmin):
 	list_display = ('get_full_name', 'documento', 'correo', 'telefono', 'direccion', 'grupo')
-	search_fields = ('nombres','apellidos','documento', 'grupo')
+	search_fields = ('nombres','apellidos','documento', 'grupo__descripcion')
 	resource_class = LiderResource
 
 
