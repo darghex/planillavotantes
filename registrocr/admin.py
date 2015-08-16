@@ -29,7 +29,7 @@ from import_export.admin import ImportExportActionModelAdmin
 @admin.register(Ciudadano)
 class CiudadanoAdmin(ImportExportActionModelAdmin):
 	list_display = ('get_full_name', 'documento', 'correo', 'telefono', 'direccion', 'lider')
-	search_fields = ('nombres','apellidos','documento', 'lider')
+	search_fields = ('nombres','apellidos','documento', 'lider__nombres')
 	resource_class = CiudadanoResource
 
 	"""
