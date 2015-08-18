@@ -38,7 +38,7 @@ class Lider(models.Model):
 
 	nombres = models.CharField(max_length = 40)
 	apellidos = models.CharField(max_length = 40)
-	documento = models.BigIntegerField(unique=True, validators=[RegexValidator(regex='^\d{7}$', message='Documento no es correcto', code='Invalid number')])
+	documento = models.BigIntegerField(unique=True)
 	direccion = models.CharField(max_length = 50)
 	correo =  models.EmailField(max_length=70,blank=True, null = True)
 	ciudad = models.ForeignKey(Ciudad)
@@ -60,7 +60,7 @@ class Ciudadano(models.Model):
 
 	nombres = models.CharField(max_length = 40)
 	apellidos = models.CharField(max_length = 40)
-	documento = models.BigIntegerField(unique=True, validators=[RegexValidator(regex='^\d{7}$', message='Documento no es correcto', code='Invalid number')])
+	documento = models.BigIntegerField(unique=True)
 	direccion = models.CharField(max_length = 50)
 	correo =  models.EmailField(max_length=70,blank=True, null = True)
 	ciudad = models.ForeignKey(Ciudad)
