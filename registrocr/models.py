@@ -38,11 +38,11 @@ class Lider(models.Model):
 
 	nombres = models.CharField(max_length = 40)
 	apellidos = models.CharField(max_length = 40)
-	documento = models.BigIntegerField(unique=True, validators=[RegexValidator(regex='^\d{8}$', message='Documento no es correcto', code='Invalid number')])
+	documento = models.BigIntegerField(unique=True, validators=[RegexValidator(regex='^\d{7}$', message='Documento no es correcto', code='Invalid number')])
 	direccion = models.CharField(max_length = 50)
 	correo =  models.EmailField(max_length=70,blank=True, null = True)
 	ciudad = models.ForeignKey(Ciudad)
-	telefono = models.BigIntegerField(unique=True, validators=[RegexValidator(regex='^\d{10}$', message='Telefono correcto', code='Invalid number')])
+	telefono = models.BigIntegerField(unique=True, validators=[RegexValidator(regex='^\d{7}$', message='Telefono correcto', code='Invalid number')])
 	grupo = models.ForeignKey(Categoria)
 	
 
@@ -60,12 +60,12 @@ class Ciudadano(models.Model):
 
 	nombres = models.CharField(max_length = 40)
 	apellidos = models.CharField(max_length = 40)
-	documento = models.BigIntegerField(unique=True, validators=[RegexValidator(regex='^\d{8}$', message='Documento no es correcto', code='Invalid number')])
+	documento = models.BigIntegerField(unique=True, validators=[RegexValidator(regex='^\d{7}$', message='Documento no es correcto', code='Invalid number')])
 	direccion = models.CharField(max_length = 50)
 	correo =  models.EmailField(max_length=70,blank=True, null = True)
 	ciudad = models.ForeignKey(Ciudad)
 	fecha_cumpleanios = models.DateField( verbose_name = 'Fecha de cumpleaños (dd/mm/yyyy), si no se tiene al año de nacimiento ingrese el actual')
-	telefono = models.BigIntegerField(unique=True, validators=[RegexValidator(regex='^\d{10}$', message='Telefono correcto', code='Invalid number')])
+	telefono = models.BigIntegerField(unique=True, validators=[RegexValidator(regex='^\d{7}$', message='Telefono correcto', code='Invalid number')])
 	lider = models.ForeignKey(Lider)
 	colaborador = models.CharField(max_length = 60, null = True, blank = True)
 	#candidato =  models.ForeignKey(Candidato)
