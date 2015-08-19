@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import django.core.validators
 
 
 class Migration(migrations.Migration):
@@ -41,11 +40,11 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('nombres', models.CharField(max_length=40)),
                 ('apellidos', models.CharField(max_length=40)),
-                ('documento', models.BigIntegerField(unique=True, validators=[django.core.validators.RegexValidator(regex=b'^\\d{10}$', message=b'Documento no es correcto', code=b'Invalid number')])),
+                ('documento', models.BigIntegerField(unique=True)),
                 ('direccion', models.CharField(max_length=50)),
                 ('correo', models.EmailField(max_length=70, null=True, blank=True)),
                 ('fecha_cumpleanios', models.DateField(verbose_name=b'Fecha de cumplea\xc3\xb1os (dd/mm/yyyy), si no se tiene al a\xc3\xb1o de nacimiento ingrese el actual')),
-                ('telefono', models.BigIntegerField(unique=True, validators=[django.core.validators.RegexValidator(regex=b'^\\d{10}$', message=b'Telefono correcto', code=b'Invalid number')])),
+                ('telefono', models.BigIntegerField()),
                 ('colaborador', models.CharField(max_length=60, null=True, blank=True)),
                 ('ciudad', models.ForeignKey(to='registrocr.Ciudad')),
             ],
@@ -56,10 +55,10 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('nombres', models.CharField(max_length=40)),
                 ('apellidos', models.CharField(max_length=40)),
-                ('documento', models.BigIntegerField(unique=True, validators=[django.core.validators.RegexValidator(regex=b'^\\d{10}$', message=b'Documento no es correcto', code=b'Invalid number')])),
+                ('documento', models.BigIntegerField(unique=True)),
                 ('direccion', models.CharField(max_length=50)),
                 ('correo', models.EmailField(max_length=70, null=True, blank=True)),
-                ('telefono', models.BigIntegerField(unique=True, validators=[django.core.validators.RegexValidator(regex=b'^\\d{10}$', message=b'Telefono correcto', code=b'Invalid number')])),
+                ('telefono', models.BigIntegerField(unique=True)),
                 ('ciudad', models.ForeignKey(to='registrocr.Ciudad')),
                 ('grupo', models.ForeignKey(to='registrocr.Categoria')),
             ],
