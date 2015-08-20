@@ -16,7 +16,8 @@ class CiudadanoResource(resources.ModelResource):
 
     class Meta:
         model = Ciudadano
-        fields = ('nombres', 'apellidos', 'documento,', 'direccion', 'correo', 'ciudad__ciudad','telefono', 'fecha_cumpleanios','lider__nombres', 'lider_apellidos', 'colaborador')
+        fields = ('nombres', 'apellidos', 'documento,', 'direccion', 'correo', 'ciudad__ciudad','telefono', 'fecha_cumpleanios','lider__nombres', 'lider_apellidos', 'colaborador', 'departamento', 'municipio', 'puesto',
+        'direccion_puesto', 'mesa')
 
 
 
@@ -28,7 +29,7 @@ from import_export.admin import ImportExportActionModelAdmin
 
 @admin.register(Ciudadano)
 class CiudadanoAdmin(ImportExportActionModelAdmin):
-	list_display = ('get_full_name', 'documento', 'correo', 'telefono', 'direccion', 'lider')
+	list_display = ('get_full_name', 'documento', 'correo', 'telefono', 'direccion', 'lider','puesto', 'mesa')
 	search_fields = ('nombres','apellidos','documento', 'lider__nombres')
 	resource_class = CiudadanoResource
 
