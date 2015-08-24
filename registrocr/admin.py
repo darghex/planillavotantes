@@ -32,7 +32,7 @@ class RegistraduriaFilter(admin.SimpleListFilter):
     title = 'Puesto de votacion'
 
     # Parameter for the filter that will be used in the URL query.
-    parameter_name = 'decade'
+    parameter_name = 'votante'
 
     def lookups(self, request, model_admin):
         

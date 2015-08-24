@@ -265,12 +265,13 @@ p.file-upload > input[type="file"] {
 div.navbar-inner{
  background-color: #00529E;   
 }
-.navbar-default .container .navbar-nav>li>a {
+.navbar-default.container.navbar-nav>li>a {
  color: #FFF;   
 }
-.navbar-default .container .navbar-nav>li>a:hover {
+.navbar-default.container.navbar-nav>li>a:hover {
  color: #FF8;   
 }
+
 
 .form-signin {
     background-color: #FFF;   
