@@ -268,7 +268,16 @@ div.navbar-inner{
 .navbar-default.container.navbar-nav>li>a {
  color: #FFF;   
 }
+
+.navbar-nav>li>a {
+ color: #FFF;   
+}
+
 .navbar-default.container.navbar-nav>li>a:hover {
+ color: #FF8;   
+}
+
+.navbar-nav>li>a:hover {
  color: #FF8;   
 }
 
