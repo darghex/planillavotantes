@@ -29,7 +29,7 @@ from import_export.admin import ImportExportActionModelAdmin
 class RegistraduriaFilter(admin.SimpleListFilter):
     # Human-readable title which will be displayed in the
     # right admin sidebar just above the filter options.
-    title = 'Puesto de votacion'
+    title = 'Tiene puesto de votacion'
 
     # Parameter for the filter that will be used in the URL query.
     parameter_name = 'votante'
@@ -70,13 +70,31 @@ class CiudadanoAdmin(ImportExportActionModelAdmin):
 	"""
 
 
+class VotantesFilter(admin.SimpleListFilter):
+    title = 'Tiene Votantes'
+
+    parameter_name = 'votantes'
+
+    def lookups(self, request, model_admin):
+        
+        return (
+            ('y', 'Si'),
+            ('n', 'No'),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'y':
+            return queryset.filter(ciudadano__isnull = False).distinct()
+        if self.value() == 'n':
+            return queryset.filter(ciudadano__isnull = True).distinct()
+
+
 @admin.register(Lider)
 class LiderAdmin(ImportExportActionModelAdmin):
-	list_display = ('get_full_name', 'documento', 'correo', 'telefono', 'direccion', 'grupo')
-	search_fields = ('nombres','apellidos','documento', 'grupo__descripcion')
-	resource_class = LiderResource
-
-
+    list_display = ('get_full_name', 'documento', 'correo', 'telefono', 'direccion', 'grupo')
+    search_fields = ('nombres','apellidos','documento', 'grupo__descripcion')
+    resource_class = LiderResource
+    list_filter = (VotantesFilter,)
 
 """
 @admin.register(Candidato)
