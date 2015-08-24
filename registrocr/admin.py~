@@ -29,7 +29,7 @@ from import_export.admin import ImportExportActionModelAdmin
 class RegistraduriaFilter(admin.SimpleListFilter):
     # Human-readable title which will be displayed in the
     # right admin sidebar just above the filter options.
-    title = _('Puesto de votacion')
+    title = 'Puesto de votacion'
 
     # Parameter for the filter that will be used in the URL query.
     parameter_name = 'decade'
@@ -46,10 +46,6 @@ class RegistraduriaFilter(admin.SimpleListFilter):
             return queryset.exclude(mesa='')
         if self.value() == 'n':
             return queryset.filter(mesa='')
-
-class PersonAdmin(admin.ModelAdmin):
-    list_filter = (DecadeBornListFilter,)
-
 
 
 
