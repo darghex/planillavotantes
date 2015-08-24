@@ -37,8 +37,8 @@ class RegistraduriaFilter(admin.SimpleListFilter):
     def lookups(self, request, model_admin):
         
         return (
-            ('y', _('Si')),
-            ('n', _('No')),
+            ('y', 'Si'),
+            ('n', 'No'),
         )
 
     def queryset(self, request, queryset):
