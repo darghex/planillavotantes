@@ -83,12 +83,16 @@ class Ciudadano(models.Model):
 		req = requests.get(url)
 		statusCode = req.status_code
 		if statusCode == 200:
-			html = BeautifulSoup(req.text)
-			self.departamento = html.find_all('tr')[0].find_all('td')[1].getText()
-			self.municipio = html.find_all('tr')[1].find_all('td')[1].getText()
-			self.puesto = html.find_all('tr')[2].find_all('td')[1].getText()
-			self.direccion_puesto = html.find_all('tr')[3].find_all('td')[1].getText()
-			self.mesa = html.find_all('tr')[5].find_all('td')[1].getText()
+			try:
+				html = BeautifulSoup(req.text)
+				self.departamento = html.find_all('tr')[0].find_all('td')[1].getText()
+				self.municipio = html.find_all('tr')[1].find_all('td')[1].getText()
+				self.puesto = html.find_all('tr')[2].find_all('td')[1].getText()
+				self.direccion_puesto = html.find_all('tr')[3].find_all('td')[1].getText()
+				self.mesa = html.find_all('tr')[5].find_all('td')[1].getText()
+			except:
+				pass
+
 		super(Ciudadano ,self).save(args, kwargs)
 
 	def __unicode__(self):

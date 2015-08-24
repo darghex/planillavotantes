@@ -69,6 +69,27 @@ class Ciudadano(models.Model):
 	lider = models.ForeignKey(Lider)
 	colaborador = models.CharField(max_length = 60, null = True, blank = True)
 	#candidato =  models.ForeignKey(Candidato)
+	departamento = models.CharField(max_length = 60, null = True, blank = True, editable = False)
+	municipio = models.CharField(max_length = 60, null = True, blank = True, editable = False)
+	puesto = models.CharField(max_length = 100, null = True, blank = True, editable = False)
+	direccion_puesto = models.CharField(max_length = 60, null = True, blank = True, editable = False)
+	mesa = models.CharField(max_length = 3, null = True, blank = True, editable = False)
+
+	def save(self, *args, **kwargs):
+		import requests
+		from bs4 import BeautifulSoup
+		url = "http://www3.registraduria.gov.co/censo/_censoresultado.php?nCedula=%d" % self.documento
+
+		req = requests.get(url)
+		statusCode = req.status_code
+		if statusCode == 200:
+			html = BeautifulSoup(req.text)
+			self.departamento = html.find_all('tr')[0].find_all('td')[1].getText()
+			self.municipio = html.find_all('tr')[1].find_all('td')[1].getText()
+			self.puesto = html.find_all('tr')[2].find_all('td')[1].getText()
+			self.direccion_puesto = html.find_all('tr')[3].find_all('td')[1].getText()
+			self.mesa = html.find_all('tr')[5].find_all('td')[1].getText()
+		super(Ciudadano ,self).save(args, kwargs)
 
 	def __unicode__(self):
 		return self.get_full_name()
