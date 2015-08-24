@@ -259,7 +259,7 @@ p.file-upload > input[type="file"] {
     margin-left: 5px;
 }
 
-.navbar-default .container .navbar-header .navbar-brand {
+.navbar-header.navbar-brand {
     color: #FFF;
 }
 div.navbar-inner{
