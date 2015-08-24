@@ -264,12 +264,9 @@ p.file-upload > input[type="file"] {
 }
 div.navbar-inner{
  background-color: #00529E;   
+ color: #FFF !important;
 }
 .navbar-default.container.navbar-nav>li>a {
- color: #FFF;   
-}
-
-.navbar-nav>li>a {
  color: #FFF;   
 }
 
@@ -277,9 +274,6 @@ div.navbar-inner{
  color: #FF8;   
 }
 
-.navbar-nav>li>a:hover {
- color: #FF8;   
-}
 
 
 .form-signin {
