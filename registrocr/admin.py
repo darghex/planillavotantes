@@ -52,7 +52,7 @@ class RegistraduriaFilter(admin.SimpleListFilter):
 @admin.register(Ciudadano)
 class CiudadanoAdmin(ImportExportActionModelAdmin):
 	list_display = ('get_full_name', 'documento', 'correo', 'telefono', 'direccion', 'lider','puesto', 'mesa')
-	search_fields = ('nombres','apellidos','documento', 'lider__nombres', 'lider__apellidos')
+	search_fields = ('nombres','apellidos','documento', 'lider__nombres', 'lider__apellidos', 'lider__documento')
 	resource_class = CiudadanoResource
 	list_filter = (RegistraduriaFilter,)
 
