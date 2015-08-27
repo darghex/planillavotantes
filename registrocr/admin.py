@@ -55,7 +55,7 @@ class CiudadanoAdmin(ImportExportActionModelAdmin):
 	search_fields = ('nombres','apellidos','documento', 'lider__nombres', 'lider__apellidos')
 	resource_class = CiudadanoResource
 	list_filter = (RegistraduriaFilter,)
-    #list_per_page = 30
+    list_per_page = 25
 
 	"""
 	def save_model(self, request, obj, form, change):
