@@ -54,6 +54,9 @@ class Lider(models.Model):
 
 	get_full_name.short_description = 'Nombre'
 
+	def votantes(self):
+		return Ciudadano.objects.filter(lider = self).count()
+
 	
 
 class Ciudadano(models.Model):

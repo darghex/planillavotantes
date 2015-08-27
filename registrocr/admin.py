@@ -55,7 +55,7 @@ class CiudadanoAdmin(ImportExportActionModelAdmin):
 	search_fields = ('nombres','apellidos','documento', 'lider__nombres', 'lider__apellidos')
 	resource_class = CiudadanoResource
 	list_filter = (RegistraduriaFilter,)
-    list_per_page = 25
+
 
 	"""
 	def save_model(self, request, obj, form, change):
@@ -92,7 +92,7 @@ class VotantesFilter(admin.SimpleListFilter):
 
 @admin.register(Lider)
 class LiderAdmin(ImportExportActionModelAdmin):
-    list_display = ('get_full_name', 'documento', 'correo', 'telefono', 'direccion', 'grupo')
+    list_display = ('get_full_name', 'documento', 'correo', 'telefono', 'direccion', 'grupo','votantes')
     search_fields = ('nombres','apellidos','documento', 'grupo__descripcion')
     resource_class = LiderResource
     list_filter = (VotantesFilter,)
