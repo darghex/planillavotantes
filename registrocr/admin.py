@@ -43,9 +43,9 @@ class RegistraduriaFilter(admin.SimpleListFilter):
 
     def queryset(self, request, queryset):
         if self.value() == 'y':
-            return queryset.exclude(mesa='')
+            return queryset.exclude(mesa__isnull = True)
         if self.value() == 'n':
-            return queryset.filter(mesa='')
+            return queryset.filter(mesa__isnull = True) 
 
 
 
