@@ -58,7 +58,7 @@ class Lider(models.Model):
 		return "<a href='/admin/registrocr/ciudadano/?q=%d'>%d</a>" % ( self.documento , Ciudadano.objects.filter(lider = self).count()  )
 
 	votantes.allow_tags = True
-    votantes.admin_order_field = "votantes"
+    
 
 	
 
