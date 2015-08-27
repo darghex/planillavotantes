@@ -55,7 +55,7 @@ class Lider(models.Model):
 	get_full_name.short_description = 'Nombre'
 
 	def votantes(self):
-		return "<a href='/admin/registrocr/ciudadano/?q=%s'>%d</a>" % (self.documento , Ciudadano.objects.filter(lider = self).count()  )
+		return "<a href='/admin/registrocr/ciudadano/?q=%d'>%d</a>" % ( self.documento , Ciudadano.objects.filter(lider = self).count()  )
 
 	votantes.allow_tags = True
     votantes.admin_order_field = "votantes"
