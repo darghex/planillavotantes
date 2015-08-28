@@ -9,7 +9,7 @@ class LiderResource(resources.ModelResource):
 
     class Meta:
         model = Lider
-        fields = ('nombres', 'apellidos', 'documento,', 'direccion', 'correo', 'ciudad__ciudad','telefono', 'grupo__descripcion', 'votantes')
+        fields = ('nombres', 'apellidos', 'documento,', 'direccion', 'correo', 'ciudad__ciudad','telefono', 'grupo__descripcion')
 
 
 class CiudadanoResource(resources.ModelResource):
