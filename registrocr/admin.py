@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import Ciudadano, Ciudad, Categoria, Lider
+from models import Ciudadano, Ciudad, Categoria, Lider, Candidato
 
 
 from import_export import resources
@@ -51,20 +51,26 @@ class RegistraduriaFilter(admin.SimpleListFilter):
 
 @admin.register(Ciudadano)
 class CiudadanoAdmin(ImportExportActionModelAdmin):
-	list_display = ('get_full_name', 'documento', 'correo', 'telefono', 'direccion', 'lider','puesto', 'mesa')
-	search_fields = ('nombres','apellidos','documento', 'lider__nombres', 'lider__apellidos', 'lider__documento')
-	resource_class = CiudadanoResource
-	list_filter = (RegistraduriaFilter,)
+    
+    fieldsets = (( None, { 'fields': ( ('nombres', 'apellidos'), 'documento',('telefono', 'correo'),('direccion', 'ciudad'),('lider','colaborador'),'llamada','candidatos','observaciones') }),
+        ('Informacion de votacion', { 'classes': ('collapse',),
+                    'fields': ('departamento', 'municipio','puesto','direccion_puesto','mesa')
+        }),
+        )
+    list_display = ('get_full_name', 'documento', 'correo', 'telefono', 'direccion', 'lider', 'municipio' ,'puesto', 'mesa','llamada')
+    search_fields = ('nombres','apellidos','documento', 'lider__nombres', 'lider__apellidos', 'lider__documento')
 
+    resource_class = CiudadanoResource
+    list_filter = (RegistraduriaFilter,'municipio')
+    filter_horizontal = ('candidatos', )
 
-	"""
-	def save_model(self, request, obj, form, change):
+    """
+    def save_model(self, request, obj, form, change):
 		obj.lider = request.user
 		obj.save()
-	"""
-
-	"""
-	def get_queryset (self, request):
+    """
+    """
+    def get_queryset (self, request):
 		if request.user.is_superuser:
 			return Ciudadano.objects.all()
 		return Ciudadano.objects.filter( lider = request.user)
@@ -97,11 +103,11 @@ class LiderAdmin(ImportExportActionModelAdmin):
     resource_class = LiderResource
     list_filter = (VotantesFilter,)
 
-"""
+
 @admin.register(Candidato)
 class CandidatoAdmin(admin.ModelAdmin):
-	list_display = ('get_full_name','perfil','numero_tarjeton')
-"""
+	list_display = ('get_full_name','perfil')
+
 
 @admin.register(Ciudad)
 class CiudadAdmin(admin.ModelAdmin):
