@@ -44,6 +44,11 @@ class Lider(models.Model):
 	ciudad = models.ForeignKey(Ciudad)
 	telefono = models.BigIntegerField(unique=True)
 	grupo = models.ForeignKey(Categoria)
+	reunion = models.BooleanField(default = False, help_text = 'Indica si ya ha realizado reunión')
+	fecha_reunion = models.DateField(null = True, blank = True)
+
+	class Meta:
+		verbose_name_plural = "Lideres"
 
 	def save(self, *args, **kwargs):
 		c = Ciudadano()
@@ -72,6 +77,20 @@ class Lider(models.Model):
 		return "<a href='/admin/registrocr/ciudadano/?q=%d'>%d</a>" % ( self.documento , Ciudadano.objects.filter(lider = self).count()  )
 
 	votantes.allow_tags = True
+
+
+	def nulos(self):
+		return "<a href='/admin/registrocr/ciudadano/?q=%d&votante=n'>%d</a>" % ( self.documento , Ciudadano.objects.filter(municipio__isnull = True, lider = self).count()  )
+
+	nulos.allow_tags = True
+
+
+	def otra_ciudad(self, ciudad = 'ESPINAL'):
+		
+		return "<a href='/admin/registrocr/ciudadano/?q=%d&otraciudad=y'>%d</a>" % ( self.documento , Ciudadano.objects.filter(lider = self).exclude(municipio__icontains = ciudad).exclude(municipio__isnull = True).count()  )
+
+	otra_ciudad.allow_tags = True
+
     
 
 	
@@ -107,27 +126,42 @@ class Ciudadano(models.Model):
 		req = requests.get(url)
 		statusCode = req.status_code
 		if statusCode == 200:
+			html = BeautifulSoup(req.text)
 			try:
-				html = BeautifulSoup(req.text)
-				self.departamento = html.find_all('tr')[0].find_all('td')[1].getText()
-				self.municipio = html.find_all('tr')[1].find_all('td')[1].getText()
-				self.puesto = html.find_all('tr')[2].find_all('td')[1].getText()
-				self.direccion_puesto = html.find_all('tr')[3].find_all('td')[1].getText()
-				self.mesa = html.find_all('tr')[5].find_all('td')[1].getText()
+				self.departamento = html.find_all('tr')[0].find_all('td')[1].getText().strip()
 			except:
 				self.departamento = None
+			try:
+				self.municipio = html.find_all('tr')[1].find_all('td')[1].getText().strip()
+			except:
 				self.municipio = None
+
+			try:
+				self.puesto = html.find_all('tr')[2].find_all('td')[1].getText().strip()
+			except:
 				self.puesto = None
+
+			try:
+				self.direccion_puesto = html.find_all('tr')[3].find_all('td')[1].getText().strip()
+			except:
 				self.direccion_puesto = None
+
+			try:
+				self.mesa = html.find_all('tr')[5].find_all('td')[1].getText().strip()
+			except:
 				self.mesa = None
 
 		super(Ciudadano ,self).save(args, kwargs)
 
 	@staticmethod
-	def sincronize():
+	def sincronize(null = True):
 		import requests
 		from bs4 import BeautifulSoup
-		ciudadanos = Ciudadano.objects.filter(mesa__isnull = True)
+		if null:
+			ciudadanos = Ciudadano.objects.filter(mesa__isnull = True)
+		else:
+			ciudadanos = Ciudadano.objects.filter(mesa = '')
+
 		for c in ciudadanos:
 			
 			url = "http://www3.registraduria.gov.co/censo/_censoresultado.php?nCedula=%d" % c.documento

@@ -283,6 +283,21 @@ div.navbar-inner{
     border-color: #e7e7e7; 
 }
 
+span.small {
+    color: #FFF;
+}
+
+span.quiet {
+    color: #FFF;
+}
+
+span.small a {
+    color: #FF0;
+}
+
+span.quit a {
+    color: #FF0;
+}
 
 .form-signin {
     background-color: #FFF;   

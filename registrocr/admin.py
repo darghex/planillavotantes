@@ -9,7 +9,7 @@ class LiderResource(resources.ModelResource):
 
     class Meta:
         model = Lider
-        fields = ('nombres', 'apellidos', 'documento,', 'direccion', 'correo', 'ciudad__ciudad','telefono', 'grupo__descripcion')
+        fields = ('nombres', 'apellidos', 'documento,', 'direccion', 'correo', 'ciudad__ciudad','telefono', 'grupo__descripcion', 'reunion', 'fecha_reunion')
 
 
 class CiudadanoResource(resources.ModelResource):
@@ -47,6 +47,29 @@ class RegistraduriaFilter(admin.SimpleListFilter):
         if self.value() == 'n':
             return queryset.filter(mesa__isnull = True) 
 
+class FueraCiudadFilter(admin.SimpleListFilter):
+    # Human-readable title which will be displayed in the
+    # right admin sidebar just above the filter options.
+    title = 'Fuera de la Ciudad'
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'otraciudad'
+
+    def lookups(self, request, model_admin):
+        
+        return (
+            ('y', 'Si'),
+            ('n', 'No'),
+        )
+
+    def queryset(self, request, queryset):
+        ciudad = u'ESPINAL'
+        
+        if self.value() == 'y':
+            return queryset.exclude(municipio__icontains = ciudad).exclude(municipio__isnull = True)
+        if self.value() == 'n':
+            return queryset.filter(municipio__icontains  = ciudad,)
+
 
 
 @admin.register(Ciudadano)
@@ -61,7 +84,7 @@ class CiudadanoAdmin(ImportExportActionModelAdmin):
     search_fields = ('nombres','apellidos','documento', 'lider__nombres', 'lider__apellidos', 'lider__documento')
 
     resource_class = CiudadanoResource
-    list_filter = (RegistraduriaFilter,'municipio')
+    list_filter = (RegistraduriaFilter,FueraCiudadFilter,'lider__grupo__descripcion', 'municipio')
     filter_horizontal = ('candidatos', )
 
     """
@@ -98,8 +121,8 @@ class VotantesFilter(admin.SimpleListFilter):
 
 @admin.register(Lider)
 class LiderAdmin(ImportExportActionModelAdmin):
-    list_display = ('get_full_name', 'documento', 'correo', 'telefono', 'direccion', 'grupo','votantes')
-    search_fields = ('nombres','apellidos','documento', 'grupo__descripcion')
+    list_display = ('get_full_name', 'documento', 'correo', 'telefono',  'grupo','votantes', 'nulos','otra_ciudad', 'reunion', 'fecha_reunion')
+    search_fields = ('nombres','apellidos','documento', 'grupo__descripcion', 'reunion',)
     resource_class = LiderResource
     list_filter = (VotantesFilter,)
 
