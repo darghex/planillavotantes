@@ -51,7 +51,11 @@ class Lider(models.Model):
 		verbose_name_plural = "Lideres"
 
 	def save(self, *args, **kwargs):
-		c = Ciudadano()
+		try:
+			c = Ciudadano.objects.get( documento = self.documento )
+		except Ciudadano.DoesNotExist:
+			c = Ciudadano()
+
 		c.nombres = self.nombres
 		c.apellidos = self.apellidos
 		c.documento = self.documento
