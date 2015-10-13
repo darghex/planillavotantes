@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import Ciudadano, Ciudad, Categoria, Lider, Candidato
+from models import Ciudadano, Ciudad, Categoria, Lider, Candidato, Jurado
 
 
 from import_export import resources
@@ -43,9 +43,31 @@ class RegistraduriaFilter(admin.SimpleListFilter):
 
     def queryset(self, request, queryset):
         if self.value() == 'y':
-            return queryset.exclude(mesa__isnull = True)
+            return queryset.exclude(puesto__isnull = True)
         if self.value() == 'n':
-            return queryset.filter(mesa__isnull = True) 
+            return queryset.filter(puesto__isnull = True) 
+
+
+class JuradoFilter(admin.SimpleListFilter):
+    # Human-readable title which will be displayed in the
+    # right admin sidebar just above the filter options.
+    title = 'Es Jurado'
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'jurado'
+
+    def lookups(self, request, model_admin):
+        
+        return (
+            ('y', 'Si'),
+            ('n', 'No'),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'y':
+            return queryset.filter( id__in = Jurado.objects.all())
+        if self.value() == 'n':
+            return queryset.exclude( id__in = Jurado.objects.all()) 
 
 class FueraCiudadFilter(admin.SimpleListFilter):
     # Human-readable title which will be displayed in the
@@ -70,6 +92,18 @@ class FueraCiudadFilter(admin.SimpleListFilter):
         if self.value() == 'n':
             return queryset.filter(municipio__icontains  = ciudad,)
 
+class JuradoInline(admin.TabularInline):
+    model = Jurado
+    verbose_name = "Es Jurado"
+    verbose_name_plural = "Es Jurado"
+    extra = 0
+    readonly_fields = ('departamento', 'municipio','puesto','mesa')
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(Ciudadano)
@@ -80,12 +114,14 @@ class CiudadanoAdmin(ImportExportActionModelAdmin):
                     'fields': ('departamento', 'municipio','puesto','direccion_puesto','mesa')
         }),
         )
-    list_display = ('get_full_name', 'documento', 'correo', 'telefono', 'direccion', 'lider', 'municipio' ,'puesto', 'mesa','llamada')
+    list_display = ('get_full_name', 'documento',  'telefono',  'lider', 'municipio' ,'puesto', 'mesa','llamada','es_jurado','rol')
     search_fields = ('nombres','apellidos','documento', 'lider__nombres', 'lider__apellidos', 'lider__documento')
 
     resource_class = CiudadanoResource
-    list_filter = (RegistraduriaFilter,FueraCiudadFilter,'lider__grupo__descripcion', 'municipio')
+    list_filter = (RegistraduriaFilter,FueraCiudadFilter, JuradoFilter, 'lider__grupo__descripcion', 'rol','llamada')
     filter_horizontal = ('candidatos', )
+    inlines = (JuradoInline,)
+    readonly_fields = ('departamento', 'municipio','puesto','direccion_puesto','mesa')
 
     """
     def save_model(self, request, obj, form, change):
@@ -99,6 +135,15 @@ class CiudadanoAdmin(ImportExportActionModelAdmin):
 		return Ciudadano.objects.filter( lider = request.user)
 	"""
 
+    def asignar_punto(self, request, queryset):
+        queryset.update(rol=1)    
+    asignar_punto.short_description = "Asignar P. de Informacion (seleccionados)"
+    
+    def desasignar(self, request, queryset):
+        queryset.update(rol=0)        
+    desasignar.short_description = "Sin rol (Seleccionados)"
+
+    actions = [ asignar_punto, desasignar ]
 
 class VotantesFilter(admin.SimpleListFilter):
     title = 'Tiene Votantes'
@@ -121,7 +166,7 @@ class VotantesFilter(admin.SimpleListFilter):
 
 @admin.register(Lider)
 class LiderAdmin(ImportExportActionModelAdmin):
-    list_display = ('get_full_name', 'documento', 'correo', 'telefono',  'grupo','votantes', 'nulos','otra_ciudad', 'reunion', 'fecha_reunion')
+    list_display = ('get_full_name', 'documento', 'telefono',  'grupo','votantes', 'nulos','otra_ciudad', 'reunion')
     search_fields = ('nombres','apellidos','documento', 'grupo__descripcion', 'reunion',)
     resource_class = LiderResource
     list_filter = (VotantesFilter,)

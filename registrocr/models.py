@@ -5,7 +5,13 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
+class FILTER(object):
+	ALL = 0
+	NULLS = 1
+	EMPTY = 2
+
 lst_ciudades = ( ('1','ESPINAL'), ('2','CHICORAL'))
+lst_rol = ( ('0',''),('1','P. INF'), )
 
 class Ciudad(models.Model):
 	ciudad = models.CharField(max_length = 50)
@@ -111,7 +117,7 @@ class Ciudadano(models.Model):
 	telefono = models.BigIntegerField()
 	lider = models.ForeignKey(Lider)
 	colaborador = models.CharField(max_length = 60, null = True, blank = True)
-	llamada = models.BooleanField(default = False, help_text='Indique si ya realizo el telemercadeo a este votante')
+	llamada = models.BooleanField(default = False, verbose_name='Call',help_text='Indique si ya realizo el telemercadeo a este votante')
 	candidatos =  models.ManyToManyField(Candidato, null = True, blank = True,)
 	observaciones = models.CharField( max_length = 60, null = True, blank = True,)
 
@@ -120,8 +126,9 @@ class Ciudadano(models.Model):
 	puesto = models.CharField(max_length = 100, null = True, default= None, blank = True, help_text="Este campo no es obligatorio será cargado directamente de la registraduria")
 	direccion_puesto = models.CharField(max_length = 60, default= None, null = True, blank = True,help_text="Este campo no es obligatorio será cargado directamente de la registraduria")
 	mesa = models.CharField(max_length = 3, default= None,null = True, blank = True, help_text="Este campo no es obligatorio será cargado directamente de la registraduria")
+	rol = models.CharField(max_length = 1, choices = lst_rol, default = '0' )
 
-
+	
 	def save(self, *args, **kwargs):
 		import requests
 		from bs4 import BeautifulSoup
@@ -155,16 +162,46 @@ class Ciudadano(models.Model):
 			except:
 				self.mesa = None
 
+		
 		super(Ciudadano ,self).save(args, kwargs)
 
+		url ="http://190.60.255.25:81/Registraduria/vista/jurados_files/consultar_jurados.php?cedula=%d" % self.documento
+		req = requests.get(url)
+		statusCode = req.status_code
+			
+		if statusCode == 200:
+			html = BeautifulSoup(req.text)
+			j = None
+			try:
+				html = html.find_all('table')[1]
+			except:
+				return
+			try:
+				j = Jurado.objects.get(id = self)
+			except Jurado.DoesNotExist:
+				j = Jurado()
+
+			j.id = self
+			j.departamento = html.find_all('tr')[0].find_all('td')[1].getText().strip() 
+			j.municipio = html.find_all('tr')[1].find_all('td')[1].getText().strip() 
+			j.puesto = html.find_all('tr')[2].find_all('td')[1].getText().strip() 
+			j.mesa = html.find_all('tr')[3].find_all('td')[1].getText().strip() 
+			j.save()
+
+
+
 	@staticmethod
-	def sincronize(null = True):
+	def sincronize(filter = FILTER.NULLS):
+		
 		import requests
 		from bs4 import BeautifulSoup
-		if null:
+		if filter == FILTER.NULLS:
 			ciudadanos = Ciudadano.objects.filter(mesa__isnull = True)
-		else:
+		elif filter == FILTER.EMPTY:
 			ciudadanos = Ciudadano.objects.filter(mesa = '')
+		elif filter == FILTER.ALL:
+			ciudadanos = Ciudadano.objects.filter()
+
 
 		for c in ciudadanos:
 			
@@ -173,16 +210,55 @@ class Ciudadano(models.Model):
 			req = requests.get(url)
 			statusCode = req.status_code
 			if statusCode == 200:
+				html = BeautifulSoup(req.text)
 				try:
-					html = BeautifulSoup(req.text)
 					c.departamento = html.find_all('tr')[0].find_all('td')[1].getText()
+				except:
+					pass
+				try:
 					c.municipio = html.find_all('tr')[1].find_all('td')[1].getText()
+				except:
+					pass
+				try:
 					c.puesto = html.find_all('tr')[2].find_all('td')[1].getText()
+				except:
+					pass
+				try:
 					c.direccion_puesto = html.find_all('tr')[3].find_all('td')[1].getText()
+				except:
+					pass
+				try:
 					c.mesa = html.find_all('tr')[5].find_all('td')[1].getText()
 				except:
 					pass
 				c.save()
+
+			url ="http://190.60.255.25:81/Registraduria/vista/jurados_files/consultar_jurados.php?cedula=%d" % c.documento
+			req = requests.get(url)
+			statusCode = req.status_code
+			
+			if statusCode == 200:
+				html = BeautifulSoup(req.text)
+				j = None
+				try:
+					html = html.find_all('table')[1]
+				except:
+					continue
+				try:
+					j = Jurado.objects.get(id = c)
+				except Jurado.DoesNotExist:
+					j = Jurado()
+
+				j.id = c
+				j.departamento = html.find_all('tr')[0].find_all('td')[1].getText().strip() 
+				j.municipio = html.find_all('tr')[1].find_all('td')[1].getText().strip() 
+				j.puesto = html.find_all('tr')[2].find_all('td')[1].getText().strip() 
+				j.mesa = html.find_all('tr')[3].find_all('td')[1].getText().strip() 
+				j.save()
+
+				
+
+
 
 
 	def __unicode__(self):
@@ -192,4 +268,19 @@ class Ciudadano(models.Model):
 		return u"%s %s" % ( self.nombres, self.apellidos)
 
 	get_full_name.short_description = 'Nombre'
+
+	def es_jurado(self):
+		return Jurado.objects.filter(id = self.id).exists()
+	es_jurado.boolean = True
+	es_jurado.short_description = 'Jur.'
+
+
+
+class Jurado(models.Model):
+	id = models.OneToOneField(Ciudadano, primary_key=True, db_column='id')
+	departamento = models.CharField(max_length = 60, null = True, blank = True, default= None, help_text="Este campo no es obligatorio será cargado directamente de la registraduria")
+	municipio = models.CharField(max_length = 60, null = True, blank = True, default= None, help_text="Este campo no es obligatorio será cargado directamente de la registraduria")
+	puesto = models.CharField(max_length = 100, null = True, default= None, blank = True, help_text="Este campo no es obligatorio será cargado directamente de la registraduria")
+	mesa = models.CharField(max_length = 3, default= None,null = True, blank = True, help_text="Este campo no es obligatorio será cargado directamente de la registraduria")
+
 	
